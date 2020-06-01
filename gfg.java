@@ -1,106 +1,59 @@
-import java.io.*; 
-public class GFG {      
-		    
-		    static int N = 10; 
-		  
-		   
-		    
-		    static int findLargestPlus(int mat[][]) 
-		    {  
-		        int left[][] = new int[N][N]; 
-		        int right[][] = new int[N][N]; 
-		        int top[][] = new int[N][N]; 
-		        int bottom[][] = new int[N][N]; 
-		  
-		        for (int i = 0; i < N; i++)
-		        { 
-		            top[0][i] = mat[0][i]; 
+import java.util.*; 
+public class GFG 
+{
 	
-		            bottom[N - 1][i] = mat[N - 1][i]; 
-	
-		            left[i][0] = mat[i][0]; 
-		
-		            right[i][N - 1] = mat[i][N - 1]; 
-		        } 
-
-		        for (int i = 0; i < N; i++) { 
-		            for (int j = 1; j < N; j++) { 
-		                  
-		                if (mat[i][j] == 1) 
-		                    left[i][j] = left[i][j - 1] + 1; 
-		                else
-		                    left[i][j] = 0; 
-	
-		                if (mat[j][i] == 1) 
-		                    top[j][i] = top[j - 1][i] + 1; 
-		                else
-		                    top[j][i] = 0;
-		                
-		                j = N - 1 - j;
-		                
-		                if (mat[j][i] == 1) 
-		                    bottom[j][i] = bottom[j + 1][i] + 1; 
-		                else
-		                    bottom[j][i] = 0; 
-		                
-		                if (mat[i][j] == 1) 
-		                    right[i][j] = right[i][j + 1] + 1; 
-		                else
-		                    right[i][j] = 0; 
-		                
-		                j = N - 1 - j; 
-		            } 
-		        } 
-		  
-		      
-		        int n = 0; 
-
-		        for (int i = 0; i < N; i++) 
-		        { 
-		            for (int j = 0; j < N; j++)
-		            { 
-		                
-		                int len = Math.min(Math.min(top[i][j],  
-		                    bottom[i][j]),Math.min(left[i][j],  
-		                                        right[i][j])); 
-		  
-		               
-		                if (len > n) 
-		                    n = len; 
-		            } 
-		        } 
-		  
-		       
-		        if (n > 0) 
-		            return 4 * (n - 1) + 1; 
-		
-		        return 0; 
-		    } 
-		  
-		    
-		    public static void main(String[] args) 
-		    { 
-		          
-		         
-		        int mat[][] = 
-		        	{ 
-		            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 }, 
-		            { 1, 0, 1, 0, 1, 1, 1, 0, 1, 1 }, 
-		            { 1, 1, 1, 0, 1, 1, 0, 1, 0, 1 }, 
-		            { 0, 0, 0, 0, 1, 0, 0, 1, 0, 0 }, 
-		            { 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 }, 
-		            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 }, 
-		            { 1, 0, 0, 0, 1, 0, 0, 1, 0, 1 }, 
-		            { 1, 0, 1, 1, 1, 1, 0, 0, 1, 1 }, 
-		            { 1, 1, 0, 0, 1, 0, 1, 0, 0, 1 }, 
-		            { 1, 0, 1, 1, 1, 1, 0, 1, 0, 0 } 
-		        }; 
-		        System.out.println(findLargestPlus(mat)); 
-		    } 
-		
-		  
-		
-
-	}
-
+	    private static int atMostK(int arr[], int n, int k) 
+	    { 
+	  
+	       
+	        int count = 0; 
+	  
+	        
+	        int left = 0; 
+	  
+	        
+	        int right = 0; 
+	  
+	        
+	        HashMap<Integer, Integer> map = new HashMap<>(); 
+	  
+	        
+	        while (right < n) { 
+	  
+	            
+	            map.put(arr[right], map.getOrDefault(arr[right], 0) + 1); 
+	  
+	            
+	            while (map.size() > k) 
+	            { 
+	                map.put(arr[left], map.get(arr[left]) - 1); 
+	                if (map.get(arr[left]) == 0) 
+	                    map.remove(arr[left]); 
+	                left++; 
+	            } 
+	  
+	            count += right - left + 1; 
+	            right++; 
+	        } 
+	        return count; 
+	    } 
+	  
+	    
+	    private static int exactlyK(int arr[], int n, int k) 
+	    { 
+	  
+	        
+	        return (atMostK(arr, n, k) - atMostK(arr, n, k - 1)); 
+	    } 
+	  
+	   
+	    public static void main(String[] args) 
+	    { 
+	        int arr[] = { 2, 1, 2, 1, 6 }; 
+	        int n = arr.length; 
+	        int k = 2; 
+	  
+	        System.out.print(exactlyK(arr, n, k)); 
+	    } 
+	} 
 
